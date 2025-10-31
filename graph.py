@@ -11,7 +11,6 @@ def read_xml():
         root = tree.getroot()
         config = {}
         
-        # ИСПРАВЛЕННЫЕ ПРОВЕРКИ (без предупреждений)
         package_name_elem = root.find("package_name")
         if package_name_elem is None:
             print("Ошибка: тег package_name отсутствует")
