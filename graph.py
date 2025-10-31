@@ -1,5 +1,7 @@
-import os 
-import xml.etree.ElementTree as ET
+import os #проверка существования config.xml
+import xml.etree.ElementTree as ET #для чтения xml
+import urllib.request
+import urllib.error #для чтения ссылки
 
 def read_xml():
     try:
@@ -47,6 +49,61 @@ def read_xml():
         print(f"Ошибка: {e}")
         return None
 
+def dependencies_find(cargo_content): #Этап2
+    if cargo_content is None:
+        print("Нечего анализировать - cargo_content пустой")
+        return
+    
+    deps_start = cargo_content.find("[dependencies]")
+    if deps_start != -1:
+        print("Секция [dependencies] найдена!")
+    else:
+        print("Секция [dependencies] не найдена")
+        return
+        
+    deps_section = cargo_content[deps_start:]
+    next_section = deps_section.find('[', 1)  
+
+    if next_section != -1:
+        deps_content = deps_section[:next_section]
+    else:
+        deps_content = deps_section
+
+    print("Содержимое секции dependencies:")
+    print(deps_content)
+    
+    
+def url_raw_maker(repo_url): #Этап2
+    raw_url = repo_url.replace("github.com", "raw.githubusercontent.com") + "/main/Cargo.toml"
+    return raw_url
+
+def download_cargo_toml(raw_url):
+    try:
+        with urllib.request.urlopen(raw_url) as response:
+            cargo_content = response.read().decode('utf-8')
+            return cargo_content
+    except urllib.error.URLError as e:
+        print(f"Ошибка загрузки: {e}")
+        return None
+    except Exception as e:
+        print(f"Неожиданная ошибка: {e}")
+        return None
+    
+def analyser(config): #Этап2
+    repo_url = config["repository_url"]
+    print(f"Анализ репозитория: {repo_url}")
+    
+    raw_url = url_raw_maker(repo_url)
+    print(f"Raw URL: {raw_url}")
+    
+    cargo_content = download_cargo_toml(raw_url)
+    if cargo_content is None:
+        print("Файл Cargo.toml не был прочитан")
+        return None
+    else:
+        print("Cargo.toml успешно загружен")
+        return cargo_content
+
 def main():
     config = read_xml()
     if config:
@@ -54,7 +111,12 @@ def main():
         for key, value in config.items():
             print(f"{key}: {value}")
     else:
-        print("Ошибка чтения")
+        print("Ошибка чтения конфигурации")
+        return
+        
+    cargo_content = analyser(config)
+    dependencies_find(cargo_content)
+    
 
 if __name__ == "__main__":
     main()
