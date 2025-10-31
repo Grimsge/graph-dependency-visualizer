@@ -1,22 +1,25 @@
 # Инструмент визуализации графа зависимостей
 
 ## Этап 1: Минимальный прототип с конфигурацией
+- Чтение конфигурации из XML файла
+- Валидация параметров
+- Вывод настроек в формате ключ-значение
 
-### Описание
-CLI-приложение для чтения конфигурации из XML файла.
+## Этап 2: Парсинг зависимостей из Cargo.toml 
+- Загрузка Cargo.toml из GitHub репозитория
+- Парсинг секции [dependencies]
+- Извлечение имен и версий пакетов
+- Использование только стандартных библиотек Python
 
-### Использование
-1. Создайте файл `config.xml` в той же папке
-2. Заполните его по примеру ниже
-3. Запустите: `python graph.py`
+## Использование
 
-### Пример config.xml
+### 1. Создайте config.xml
 ```xml
 <?xml version="1.0" ?>
 <configuration>
-    <package_name>name</package_name>
-    <repository_url>https://url</repository_url>
-    <test_repo_mode>false_or_true</test_repo_mode>
-    <package_version>1.0</package_version>
-    <output_filename>my_graph.png</output_filename>
+    <package_name>ferris-says</package_name>
+    <repository_url>https://github.com/rust-lang/ferris-says</repository_url>
+    <test_repo_mode>false</test_repo_mode>
+    <package_version>0.2.1</package_version>
+    <output_filename>dependencies.png</output_filename>
 </configuration>
