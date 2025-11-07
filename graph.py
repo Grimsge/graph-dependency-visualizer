@@ -75,6 +75,7 @@ def extract_section_with_braces(content, start_pos): #Этап2 - извлече
     
     return '\n'.join(result)
 
+<<<<<<< HEAD
 def dependencies_find(cargo_content): #Этап2 - поиск и вывод секции зависимостей
 
     deps_start = cargo_content.find("[dependencies]")
@@ -107,6 +108,37 @@ def url_raw_maker(repo_url): #Этап2 - создание raw ссылки на
     print(f"Используем: {default_url}")
     return default_url
 def download_cargo_toml(raw_url): #Этап2 - чтение файла toml
+=======
+def dependencies_find(cargo_content): #Этап2
+    if cargo_content is None:
+        print("Нечего анализировать - cargo_content пустой")
+        return
+    
+    deps_start = cargo_content.find("[dependencies]")
+    if deps_start != -1:
+        print("Секция [dependencies] найдена!")
+    else:
+        print("Секция [dependencies] не найдена")
+        return
+        
+    deps_section = cargo_content[deps_start:]
+    next_section = deps_section.find('[', 1)  
+
+    if next_section != -1:
+        deps_content = deps_section[:next_section]
+    else:
+        deps_content = deps_section
+
+    print("Содержимое секции dependencies:")
+    print(deps_content)
+    
+    
+def url_raw_maker(repo_url): #Этап2
+    raw_url = repo_url.replace("github.com", "raw.githubusercontent.com") + "/main/Cargo.toml"
+    return raw_url
+
+def download_cargo_toml(raw_url):
+>>>>>>> 912b709 (feat: 2 этап - парсинг зависимостей из Cargo.toml)
     try:
         with urllib.request.urlopen(raw_url) as response:
             cargo_content = response.read().decode('utf-8')
@@ -118,22 +150,38 @@ def download_cargo_toml(raw_url): #Этап2 - чтение файла toml
         print(f"Неожиданная ошибка: {e}")
         return None
     
+<<<<<<< HEAD
 def analyser(config): #Этап2 -анализ репозитория
     repo_url = config["repository_url"]
     #print(f"Анализ репозитория: {repo_url}")
     
     raw_url = url_raw_maker(repo_url)
     print(f"Raw URL: {raw_url}") 
+=======
+def analyser(config): #Этап2
+    repo_url = config["repository_url"]
+    print(f"Анализ репозитория: {repo_url}")
+    
+    raw_url = url_raw_maker(repo_url)
+    print(f"Raw URL: {raw_url}")
+>>>>>>> 912b709 (feat: 2 этап - парсинг зависимостей из Cargo.toml)
     
     cargo_content = download_cargo_toml(raw_url)
     if cargo_content is None:
         print("Файл Cargo.toml не был прочитан")
         return None
     else:
+<<<<<<< HEAD
         #print("Cargo.toml успешно загружен")
         return cargo_content
 
 def main(): #Основная функция программы
+=======
+        print("Cargo.toml успешно загружен")
+        return cargo_content
+
+def main():
+>>>>>>> 912b709 (feat: 2 этап - парсинг зависимостей из Cargo.toml)
     config = read_xml()
     if config:
         print("*Конфигурационный файл прочитан")
@@ -144,6 +192,7 @@ def main(): #Основная функция программы
         return
         
     cargo_content = analyser(config)
+<<<<<<< HEAD
     if cargo_content is None:
         return
     else:
@@ -151,3 +200,10 @@ def main(): #Основная функция программы
     
 if __name__ == "__main__": #Точка входа в программу
     main()
+=======
+    dependencies_find(cargo_content)
+    
+
+if __name__ == "__main__":
+    main()
+>>>>>>> 912b709 (feat: 2 этап - парсинг зависимостей из Cargo.toml)
