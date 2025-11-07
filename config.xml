@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <configuration>
-    <package_name>ferris-says</package_name>
-    <repository_url>https://github.com/rust-lang/ferris-says</repository_url>
+    <package_name>mypkg</package_name>
+    <repository_url>https://github.com/rust-lang/rustfmt</repository_url>
     <test_repo_mode>false</test_repo_mode>
-    <package_version>0.2.1</package_version>
-    <output_filename>dependencies.png</output_filename>
+    <package_version>1.0.0</package_version>
+    <output_filename>rustfmt_dependencies.png</output_filename>
 </configuration>
